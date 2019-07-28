@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Images</title>
+  <style>
+  body {
+    text-align: center;
+    margin: 0px;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1>
+      Images
+    </h1>
+  </header>
+  <picture>
+    <source media="(max-width: 480px)"  srcset="https://firebasestorage.googleapis.com/v0/b/codelab-images-firebase.appspot.com/o/image_thumb_480.jpg?alt=media&token=800a565a-d6de-4e56-851e-7845b1ddd14d" />
+    <source media="(max-width: 640px)"  srcset="https://firebasestorage.googleapis.com/v0/b/codelab-images-firebase.appspot.com/o/image_thumb_640.jpg?alt=media&token=9780336f-6a16-4484-b7bb-313dacdf354a" />
+    <source media="(max-width: 1200px)" srcset="https://firebasestorage.googleapis.com/v0/b/codelab-images-firebase.appspot.com/o/image_thumb_1200.jpg?alt=media&token=c1a6c3c7-8a2a-4180-beab-1143294bf0b3" />
+    <source media="(max-width: 1800px)" srcset="https://firebasestorage.googleapis.com/v0/b/codelab-images-firebase.appspot.com/o/image.jpg?alt=media&token=0579055a-1f81-44ec-b4be-1f533f1bf758" />
+    <img src="https://firebasestorage.googleapis.com/v0/b/codelab-images-firebase.appspot.com/o/image.jpg?alt=media&token=0579055a-1f81-44ec-b4be-1f533f1bf758" />
+  </picture>
+</body>
+</html>

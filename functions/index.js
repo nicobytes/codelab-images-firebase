@@ -1,18 +1,16 @@
 const functions = require('firebase-functions');
 const { Storage } = require('@google-cloud/storage');
 
-const storage = new Storage();
-
 const { tmpdir } = require('os');
 const { join, dirname, basename, extname } = require('path');
-
-const sharp = require('sharp');
 const fs = require('fs-extra');
 
+const sharp = require('sharp');
 const imagemin = require('imagemin');
 const imageminPngquant = require('imagemin-pngquant');
 const imageminMozjpeg = require('imagemin-mozjpeg');
-const imageminWebp = require('imagemin-webp');
+
+const storage = new Storage();
 
 exports.optimizeImages = functions.storage
   .object()
@@ -53,10 +51,9 @@ exports.optimizeImages = functions.storage
 
       await fs.ensureDir(workingDir);
       await file.download({ destination });
-
       const bucketDir = dirname(filePath);
-      const sizes = [480, 640, 1200];
 
+      const sizes = [480, 640, 1200];
       const resizesPromises = sizes.map((size) => {
         const thumbName = `${fileName}_thumb_${size}${extendName}`;
         const thumbPath = join(workingDir, thumbName);
@@ -64,21 +61,25 @@ exports.optimizeImages = functions.storage
           .resize(size)
           .toFile(thumbPath);
       });
-
       await Promise.all(resizesPromises);
+      console.log('generate 3 images per devices, done!');
 
-      const imageminFiles = await imagemin([`${workingDir}/*.{jpg,png}`], {
+      await imagemin([`${workingDir}/*.{jpg,png}`], {
         destination: workingDir,
         plugins: [
-          imageminPngquant({quality: [0.5, 0.5]}),
-          imageminMozjpeg({quality: 50}),
-          imageminWebp({quality: 50}),
+          imageminPngquant({quality: [0.6, 0.6]}),
+          imageminMozjpeg({quality: 60}),
         ]
       });
+      console.log('optimize jpg and png, done!');
 
-      const uploadPromises = imageminFiles.map(imageminFile => {
-        return bucket.upload(imageminFile.sourcePath, {
-          destination: join(bucketDir, basename(imageminFile.sourcePath)),
+      const files = await fs.readdir(workingDir);
+      console.log(files);
+
+      const uploadPromises = files.map(file => {
+        const path = join(workingDir, file);
+        return bucket.upload(path, {
+          destination: join(bucketDir, basename(file)),
           metadata: {
             metadata: {
               optimized: true
@@ -86,8 +87,8 @@ exports.optimizeImages = functions.storage
           }
         });
       });
-
       await Promise.all(uploadPromises);
+      console.log('upload images, done!');
 
       return fs.remove(workingDir);
     } else {

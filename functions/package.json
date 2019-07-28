@@ -20,7 +20,6 @@
     "imagemin": "^7.0.0",
     "imagemin-mozjpeg": "^8.0.0",
     "imagemin-pngquant": "^8.0.0",
-    "imagemin-webp": "^5.1.0",
     "sharp": "^0.22.1"
   },
   "devDependencies": {
